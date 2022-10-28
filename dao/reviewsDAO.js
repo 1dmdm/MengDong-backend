@@ -43,9 +43,7 @@ export default class ReviewsDAO {
             'review': review,
             'date': date
           }});
-      if (reviewResponse.modifiedCount === 0) {
-        throw Error("modifiedCount === 0");
-      }
+      
       return reviewResponse;
     } catch(e) {
       console.error(`Unable to update review: ${e}`);

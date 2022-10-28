@@ -10,6 +10,10 @@ export default class ReviewsController {
         _id: req.body.user_id
       }
       const date = new Date();
+      console.log(movieId)
+      console.log(review)
+      console.log(userInfo.name)
+      console.log(userInfo._id)
       const reviewResponse = await ReviewsDAO.addReview(
         movieId,
         userInfo,
@@ -31,13 +35,13 @@ export default class ReviewsController {
   }
   static async apiUpdateReview(req, res, next) {
     try {
-      const reviewId = req.body.reviewId;
-      const userId = req.body.userId;
+      const review_id = req.body.review_id;
+      const user_id = req.body.user_id;
       const review = req.body.review;
       const date = new Date();
       const reviewResponse = await ReviewsDAO.updateReview(
-        reviewId,
-        userId,
+        review_id,
+        user_id,
         review,
         date
       );
@@ -45,9 +49,12 @@ export default class ReviewsController {
       var {error} = reviewResponse
       if (error) {
         res.status(500).json({error: "Unable to update review."});
-      } else {
-        res.json({status: "success"});
       }
+      if (reviewResponse.modifiedCount === 0) {
+        throw new Error("modifiedCount === 0");
+      }
+      res.json({status: "success"});
+      
 
     } catch(e) {
       res.status(500).json({error: e.message});
@@ -55,11 +62,11 @@ export default class ReviewsController {
   }
   static async apiDeleteReview(req, res, next) {
     try {
-      const reviewId = req.body.reviewId;
-      const userId = req.body.userId;
+      const review_id = req.body.review_id;
+      const user_id = req.body.user_id;
       const reviewResponse = await ReviewsDAO.deleteReview(
-        reviewId,
-        userId
+        review_id,
+        user_id
       );
       var {error} = reviewResponse
       if (error) {
